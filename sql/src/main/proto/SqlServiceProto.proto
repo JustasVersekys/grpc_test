@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.telesoftas.grpc.service";
+option java_outer_classname = "SqlServiceProto";
+
+package service;
+
+message Data {
+    int64 id = 1;
+    string data = 2;
+}
+
+message Response {
+    bool success = 1;
+    string message = 2;
+}
+
+service SqlService {
+    rpc saveData (Data) returns (Response);
+}

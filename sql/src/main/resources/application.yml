@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: tst-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/imlus?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
+    username: admin
+    password: t31350ft45
