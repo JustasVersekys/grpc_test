@@ -5,33 +5,40 @@ import com.telesoftas.grpc.service.Response;
 import com.telesoftas.grpc.service.SqlServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 
+@Slf4j
 @RestController
 public class SimpleController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleController.class);
+    private int grpcPort;
+    private String grpcHostname;
 
     private SqlServiceGrpc.SqlServiceBlockingStub stub;
     private long startTime;
 
+    public SimpleController(@Value("${grpc.port}") int grpcPort, @Value("${grpc.hostname}") String grpcHostname) {
+        this.grpcPort = grpcPort;
+        this.grpcHostname = grpcHostname;
+    }
+
     @PostConstruct
     private void init() {
-        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 6565).usePlaintext().build();
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress(grpcHostname, grpcPort).usePlaintext().build();
         stub = SqlServiceGrpc.newBlockingStub(managedChannel);
     }
 
     @PostMapping(value = "/doreq")
     public void save(String s) {
-        LOGGER.info("Request started");
+        log.info("Request started");
         startTime = System.currentTimeMillis();
         Data data = Data.newBuilder().setData(s).build();
         Response response = stub.saveData(data);
-        LOGGER.info("Request finished {}, time {}", response.getMessage(), System.currentTimeMillis() - startTime);
+        log.info("Request finished {}, time {}", response.getMessage(), System.currentTimeMillis() - startTime);
     }
 }

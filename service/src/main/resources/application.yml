@@ -7,3 +7,6 @@ spring:
     platform: mysql
     username: admin
     password: t31350ft45
+grpc:
+  port: 6565
+  hostname: localhost

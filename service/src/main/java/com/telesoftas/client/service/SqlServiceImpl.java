@@ -6,14 +6,13 @@ import com.telesoftas.grpc.service.Data;
 import com.telesoftas.grpc.service.Response;
 import com.telesoftas.grpc.service.SqlServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Slf4j
 @GRpcService
 public class SqlServiceImpl extends SqlServiceGrpc.SqlServiceImplBase {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqlServiceImpl.class);
     private TstTableRepo tstTableRepo;
     private static final String SAVED = "SAVED";
     private static final String FAILED = "FAILED";
@@ -25,7 +24,7 @@ public class SqlServiceImpl extends SqlServiceGrpc.SqlServiceImplBase {
 
     @Override
     public void saveData(Data request, StreamObserver<Response> responseObserver) {
-        LOGGER.info("Request received {}", request);
+        log.info("Request received {}", request);
         Response response;
         TstTable table = tstTableRepo.save(TstTable.builder().data(request.getData()).build());
         if (table.getId() != null) {
@@ -35,6 +34,6 @@ public class SqlServiceImpl extends SqlServiceGrpc.SqlServiceImplBase {
         }
         responseObserver.onNext(response);
         responseObserver.onCompleted();
-        LOGGER.info("Request saved {}", request);
+        log.info("Request saved {}", request);
     }
 }
